@@ -5,8 +5,9 @@ Install and configure the SonarQube MCP Server extension on SonarQube Server.
 
 ## Overview
 
-The SonarQube MCP Server can be installed as an extension on SonarQube Server. Once installed, SonarQube Server acts as a proxy and exposes the MCP server's tools at <YourSonarQubeURL>/mcp. Your AI agent connects to that single endpoint. There is no separate MCP server URL to manage.
-<!-- Rewrote this last line for clarity of the instruction -->
+The SonarQube MCP Server can be installed as an extension on SonarQube Server. Once installed, SonarQube Server acts as a proxy and exposes the MCP server's tools at `<YourSonarQubeURL>/mcp`. Your AI agent connects to that single endpoint. There is no separate MCP server URL to manage.
+
+<!--Rewrote this last line for clarity of the instruction -->
 
 The SonarQube Server MCP extension is available on all commercial editions: Developer, Enterprise, and Data Center Edition.
 {: note}
@@ -32,7 +33,7 @@ Sonar Vortex's agentic analysis and context augmentation features require file s
 | 2026.4 | 1.22.0.3040 |
 | 2026.3 | 1.18.1.2664 |
 
-Always set MCP_VERSION to the full 4-part version from this table (for example, use 1.18.1.2664 with SonarQube Server 2026.3). Only full 4-part tags are published to Docker Hub; 3-part tags like 1.18.1 don't exist.
+Always set `MCP_VERSION` to the full 4-part version from this table (for example, use `1.18.1.2664` with SonarQube Server 2026.3). Only full 4-part tags are published to Docker Hub; 3-part tags like `1.18.1` don't exist.
 
 ## Choose your installation method
 
@@ -70,7 +71,7 @@ Once the MCP server extension is running, configure your AI agent to connect to 
   - Use environment variable substitution to pass your token, or enter your SonarQube Server user token directly in the User token (optional) field.
 - Choose a hosting method:
   - Select Remote server (HTTP).
-  - Fill the full server URL with https://<YourSonarQubeURL>/mcp. Don't add a trailing slash.
+  - Fill the full server URL with `https://<YourSonarQubeURL>/mcp`. Don't add a trailing slash.
 - Copy the configuration and paste it into your terminal.
   - Optional: To make the MCP server available globally and not only for the repo where the command has been run, append --scope user to your CLI command.
   - Optional: Verify that the SonarQube entry has been added to your agent configuration file with your user token and the new URL.
@@ -96,7 +97,7 @@ Run the SonarQube MCP Server as a Docker container alongside SonarQube Server, u
 ## Docker specific prerequisites
 
 - Docker / Docker Compose
-- A compatible MCP Server version — see the Compatibility table on the parent page
+- Check the MCP server version compatible with your SonarQube Server version
 
 The examples below use Docker Compose. You can replace any of them with equivalent plain docker run commands if you prefer.
 {: note}
@@ -105,7 +106,7 @@ The examples below use Docker Compose. You can replace any of them with equivale
 
 Add an mcp service alongside your sonarqube service and pass the MCP connection properties as environment variables on the SonarQube Server container. The example below uses the Developer edition — replace the tag developer with enterprise to deploy the Enterprise edition instead.
 
-See an example on GitHub.
+See an example on [GitHub](https://github.com/SonarSource/docker-sonarqube/tree/master/example-compose-files/sq-with-mcp-postgres).
 
 ```yaml
 services:
@@ -200,7 +201,7 @@ For SonarQube MCP environment variables, see the [configuration reference](https
 | Variable | Example | Description |
 | -------- | ------- | ----------- |
 | STORAGE_PATH | /data | Writable directory for MCP logs, plugins, and temp files |
-| SONARQUBE_URL | http://sonarqube:9000 | Example URL of the SonarQube Server instance that the MCP server connects to |
+| SONARQUBE_URL | [Sonar Qube](http://sonarqube:9000) | Example URL of the SonarQube Server instance that the MCP server connects to |
 | SONARQUBE_HTTP_PORT | 8080 | Port the MCP server listens on |
 | SONARQUBE_TRANSPORT | http | Transport mode |
 
@@ -209,7 +210,7 @@ See also [environment variables](https://docs.sonarsource.com/sonarqube-mcp-serv
 ## Option 2: Docker Compose (Data Center edition)
 
 The Data Center Compose file follows the same pattern, scaled across multiple SonarQube and search nodes.
-See the full example on GitHub.
+See the full example on [GitHub](https://github.com/SonarSource/docker-sonarqube/tree/master/example-compose-files/sq-dce-with-mcp-postgres).
 
 ```yaml
 services:
@@ -425,29 +426,50 @@ volumes:
 
 ### MCP container environment variables for option 2
 
-Variable
-Example
-Description
-STORAGE_PATH
+| Variable | Example | Description |
+| -------- | ------- | ----------- |
+| STORAGE_PATH | /data | Writable directory for MCP logs, plugins, and temp files |
+| SONARQUBE_URL | [Sonar Qube](http://sonarqube:9000) | Example URL of the SonarQube Server instance that the MCP server connects to |
+| SONARQUBE_HTTP_PORT | 8080 | Port the MCP server listens on |
+| SONARQUBE_TRANSPORT | http | Transport mode |
 
-/data
+## Option 3: Hybrid (SonarQube Server from ZIP + MCP as Docker container)
 
-Writable directory for MCP logs, plugins, and temp files
+Use this option when SonarQube Server is installed from a ZIP archive and you want to run the MCP server as a Docker container.
 
-SONARQUBE_URL
+Step 1
+  : Configure SonarQube Server
 
-http://sonarqube:9000
+In `conf/sonar.properties`, set:
 
-Example URL of the SonarQube Server instance that the MCP server connects to
+```bash
+sonar.mcp.enabled=true
+sonar.mcp.serverUrl=http://<YourMCPServerHostname>:8080
+# Optional: sonar.mcp.healthCheckInterval=30
+```
 
-SONARQUBE_HTTP_PORT
+Then restart SonarQube Server for the changes to take effect.
 
-8080
+Step 2
+  : Start the MCP container
 
-Port the MCP server listens on
+```bash
+docker run -d \
+  --name sonarqube-mcp \
+  -e STORAGE_PATH=/data \
+  -e SONARQUBE_URL=http://<YourSonarQubeHostname>:9000 \
+  -e SONARQUBE_HTTP_HOST=0.0.0.0 \
+  -e SONARQUBE_HTTP_PORT=8080 \
+  -e SONARQUBE_TRANSPORT=http \
+  -v mcp_data:/data \
+  -p 8080:8080 \
+  sonarsource/sonarqube-mcp:${MCP_VERSION}
+```
 
-SONARQUBE_TRANSPORT
+Replace `<YourSonarQubeHostname>` with the hostname or IP address reachable from within the container.
 
-http
+## Next Steps
 
-Transport mode
+Once your MCP extension is running, go back to the parent page to configure your AI agent and check the status.
+
+<!-- Added this section to redirect to parent page. 'Configure your AI agent can be interlinked'.-->
