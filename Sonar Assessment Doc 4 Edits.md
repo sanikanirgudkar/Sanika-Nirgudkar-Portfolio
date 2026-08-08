@@ -94,7 +94,7 @@ Run the SonarQube MCP Server as a Docker container alongside SonarQube Server, u
 
 <!-- Added the short description or introduction line as it is missing on the page.-->
 
-## Docker specific prerequisites
+## Docker-specific prerequisites
 
 - Docker / Docker Compose
 - Check the MCP server version compatible with your SonarQube Server version
@@ -102,9 +102,9 @@ Run the SonarQube MCP Server as a Docker container alongside SonarQube Server, u
 The examples below use Docker Compose. You can replace any of them with equivalent plain docker run commands if you prefer.
 {: note}
 
-## Option 1: Full Docker Compose (Developer and Enterprise edition)
+## Option 1: Full Docker Compose (developer and enterprise edition)
 
-Add an mcp service alongside your sonarqube service and pass the MCP connection properties as environment variables on the SonarQube Server container. The example below uses the Developer edition — replace the tag developer with enterprise to deploy the Enterprise edition instead.
+Add an mcp service alongside your sonarqube service and pass the MCP connection properties as environment variables on the SonarQube Server container. The example below uses the developer edition. Replace the tag developer with enterprise to deploy the Enterprise edition instead.
 
 See an example on [GitHub](https://github.com/SonarSource/docker-sonarqube/tree/master/example-compose-files/sq-with-mcp-postgres).
 
@@ -196,7 +196,7 @@ networks:
 
 For SonarQube MCP environment variables, see the [configuration reference](https://docs.sonarsource.com/sonarqube-mcp-server/setup/sonarqube-server-hosted#configuration-reference) section.
 
-### MCP container environment variables for option 1
+### MCP container environment variables for Option 1
 
 | Variable | Example | Description |
 | -------- | ------- | ----------- |
@@ -424,7 +424,7 @@ volumes:
   <!-- This last sentence was originally inside the codeblock and was preventing a clean copy paste. I have moved it out, hence debugging the code.
   Secondly this sentence seems to be in the wrong section. It links to a Helm chart README, which is a Kubernetes concept, not a Docker Compose one. I feel it may simply have been pasted into the wrong section originally. -->
 
-### MCP container environment variables for option 2
+### MCP container environment variables for Option 2
 
 | Variable | Example | Description |
 | -------- | ------- | ----------- |
@@ -468,7 +468,7 @@ docker run -d \
 
 Replace `<YourSonarQubeHostname>` with the hostname or IP address reachable from within the container.
 
-## Next Steps
+## Next step
 
 Once your MCP extension is running, go back to the parent page to configure your AI agent and check the status.
 
