@@ -87,6 +87,10 @@ After installation, verify the extension is running correctly. In SonarQube Serv
 
 <!-- Consider this is the beginning of a child page.-->
 
+
+
+
+
 # New child page: Install from Docker
 
 Run the SonarQube MCP Server as a Docker container alongside SonarQube Server, using Docker Compose or as a standalone container next to a ZIP-based install.
