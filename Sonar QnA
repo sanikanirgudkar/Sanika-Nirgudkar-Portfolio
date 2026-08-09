@@ -1,3 +1,5 @@
+# Sonar QnA
+
 1. What does the SonarQube CLI do?
 
 The SonarQube CLI is a command-line tool (the “sonar” command) that developers run in their own terminal. It talks directly to your SonarQube Cloud or SonarQube Server account and lets you:
@@ -26,4 +28,4 @@ There are actually two different tools with almost the same name: SonarQube CLI 
 
 5. How would you improve these docs in general, and page [4] specifically?
 
-The overall look and feel of the docs does not look professional. I have seen some emojis or symbols used on pages which does not suit the documentation set. The layout can be more organised. The TOC can be improved by using better page navtitles and structure. Eg: First tab is What is Sonarqube and next is About Sonar. Does not feel right.
+The overall look and feel of the docs does not look professional and can be improved in terms of format, language, structure. I have seen some emojis or symbols used on pages which does not suit the documentation set. The layout can be more organised. The TOC can be improved by using better page navtitles and structure. Eg: First tab is What is Sonarqube and next is About Sonar. Does not feel right.

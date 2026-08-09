@@ -37,13 +37,19 @@ Always set `MCP_VERSION` to the full 4-part version from this table (for example
 
 ## Choose your installation method
 
+### Install the MCP server
+
+Once the SonarQube MCP Server extension is installed, SonarQube Server acts as a proxy and exposes the MCP server's tools at /mcp. Your AI coding agent connects to that single endpoint. There's no separate MCP server URL to manage.
+
+Select the installation method that matches how you run SonarQube Server.
+
 | Your setup | Installation guide |
 | ------ | ----- |
 | Run SonarQube Server from a downloaded ZIP/JAR and manage the process yourself (including as a systemd or Windows service) | Install from ZIP |
 | Run SonarQube Server in Docker or Docker Compose, on any edition including Data Center | Install from Docker |
 | Run SonarQube Server on Kubernetes or OpenShift, via Helm | Install on Kubernetes / OpenShift |
 
-<!-- This table is something will make everything shorter and give a quick access. I have created a new table to fix the page structure. Instead of scrolling through every method to find yours, the reader picks their row and jumps straight there. It mirrors the “Three ways to use the CLI” table on the CLI page which reuses a pattern the docs already use successfully elsewhere. This also brings uniformity among the doc sets. -->
+<!-- This table will make everything shorter and give a quick access. I have created a new table to fix the page structure. Instead of scrolling through every method to find yours, the reader picks their row and jumps straight there. It mirrors the “Three ways to use the CLI” table on the CLI page which reuses a pattern the docs already use successfully elsewhere. This also brings uniformity among the doc sets. -->
 
 ## Configuration reference
 
@@ -59,11 +65,11 @@ These properties configure the MCP proxy on SonarQube Server, regardless of whic
 
 Once the MCP server extension is running, configure your AI agent to connect to it.
 
-**Generate a user token**
-:   In SonarQube Server, go to My Account > Security and generate a user token.
+Step 1
+:   Generate a user token - In SonarQube Server, go to My Account > Security and generate a user token.
 
-**Configure your agent**
-:   Use the official SonarQube MCP Server configuration generator to get a configuration snippet for your setup:
+Step 2
+:   Configure your agent - Use the official SonarQube MCP Server configuration generator to get a configuration snippet for your setup
 
 - Identify your target MCP client.
 - Find your environment variables.
@@ -77,7 +83,8 @@ Once the MCP server extension is running, configure your AI agent to connect to 
   - Optional: Verify that the SonarQube entry has been added to your agent configuration file with your user token and the new URL.
 - Restart your agent after saving the configuration and run /mcp to verify it's working.
 
-<!-- I wanted to reduce these steps in lesser steps, but somehow could not. I need a better understanding of the end user and if they really need the steps dummed down so much.-->
+<!-- I wanted to reduce these steps in lesser steps, but somehow could not. I need a better understanding of the end user and if they really need the steps dummed down so much.
+This is one procedure on the page not written as numbered steps and use bolded run-in labels ("Generate a user token:", "Configure your agent:"). Changed them to Step 1 and Step 2 as felt they are an ordered list and as MSTP style guide, the should be in an order. -->
 
 ## Check the status
 
@@ -91,7 +98,7 @@ After installation, verify the extension is running correctly. In SonarQube Serv
 
 
 
-# New child page: Install from Docker
+# New child page: Install from Docker Image
 
 Run the SonarQube MCP Server as a Docker container alongside SonarQube Server, using Docker Compose or as a standalone container next to a ZIP-based install.
 {: shortdesc}
@@ -211,7 +218,7 @@ For SonarQube MCP environment variables, see the [configuration reference](https
 
 See also [environment variables](https://docs.sonarsource.com/sonarqube-mcp-server/reference/environment-variables).
 
-## Option 2: Docker Compose (Data Center edition)
+## Option 2: Docker Compose (data center edition)
 
 The Data Center Compose file follows the same pattern, scaled across multiple SonarQube and search nodes.
 See the full example on [GitHub](https://github.com/SonarSource/docker-sonarqube/tree/master/example-compose-files/sq-dce-with-mcp-postgres).
@@ -397,7 +404,6 @@ networks:
     enable_ipv6: false
   dual:
     driver: bridge
-   See the full list of `mcp.*` values in the [SonarQube Helm chart README](https://github.com/SonarSource/helm-chart-sonarqube/blob/master/charts/sonarqube/README.md#mcp-model-context-protocol).
     ipam:
       config:
         - subnet: "192.168.3.0/24"
@@ -420,10 +426,9 @@ volumes:
   search_logs-3:
   postgresql:
   mcp_data:
+```
 
-  ```
-
-  For the full list of mcp.* values available in this setup, see the [SonarQube Helm chart README](https://github.com/SonarSource/helm-chart-sonarqube/blob/master/charts/sonarqube/README.md#mcp-model-context-protocol).
+For the full list of `mcp.*` values, see the [SonarQube Helm chart README](https://github.com/SonarSource/helm-chart-sonarqube/blob/master/charts/sonarqube/README.md#mcp-model-context-protocol).
 
   <!-- This last sentence was originally inside the codeblock and was preventing a clean copy paste. I have moved it out, hence debugging the code.
   Secondly this sentence seems to be in the wrong section. It links to a Helm chart README, which is a Kubernetes concept, not a Docker Compose one. I feel it may simply have been pasted into the wrong section originally. -->
@@ -469,6 +474,7 @@ docker run -d \
   -p 8080:8080 \
   sonarsource/sonarqube-mcp:${MCP_VERSION}
 ```
+<!-- Added code block fencing for above codes. -->
 
 Replace `<YourSonarQubeHostname>` with the hostname or IP address reachable from within the container.
 
